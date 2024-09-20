@@ -6,8 +6,6 @@ Author: [Michael Terzer](michael.terzer@fraunhofer.it) Fraunhofer Italia 2023
 
 This workspace contains packages for the top level interaction with the concert application. It contains:
 
-
-
 1. the user-interface frontend
 2. the user-interface backend
 3. the rosbim packages
@@ -20,7 +18,24 @@ Normally this workspace is located on a remote machine (e.g. laptop or steamdeck
 
 To visualize the robot state, the robot descriptions must be imported into this workspace so that RViz can load the mesh files locally.
 
-# 2. How to run
+# 2. Installation
+
+1. Clone submodules:
+   
+   ```
+   git submodule update --init --recursive
+   ```
+
+2. Build docker container:
+   
+   ```
+   cd docker && docker compose up --build
+   ```
+   
+   
+   
+
+# 3. How to run
 
 The graphical user interface can be run with several parameters:
 
@@ -36,7 +51,7 @@ The mission generator can be run by:
 ros2 run concert_mission_generator drilling_mission_generator.py --ros-args -p use_sim_time:=true
 ```
 
-# 3. Export Map from ROSBIM
+# 4. Export Map from ROSBIM
 
 Open a new terminal in the concert_application container.
 Start the export_map plugin:
@@ -52,11 +67,11 @@ ros2 service call /export_map_plugin_node/export_map rosbim_export_map_plugin/sr
 section_heights: [5.0]"
 ```
 
-# 4.  Licence
+# 5.  Licence
 
 concert_application_ws is licensed under the terms of the Apache License 2.0. The project has recieved financial support by the Horizon 2020 EU Project CONCERT.
 
-# 5. Citation
+# 6. Citation
 
 ```
 @article{Terzer2024,
@@ -68,5 +83,3 @@ concert_application_ws is licensed under the terms of the Apache License 2.0. Th
  publisher={IEEE}
 }
 ```
-
-
