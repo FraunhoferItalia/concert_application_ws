@@ -1,0 +1,26 @@
+#goal definition
+string goal_id
+
+---
+### result definition ###
+int32 error_code
+int32 SUCCESSFUL = 0
+int32 ERROR = -2
+
+
+# Human readable description of the error code.
+string error_string
+
+builtin_interfaces/Time start
+builtin_interfaces/Time end
+
+---
+### feedback ###
+builtin_interfaces/Time timestamp
+builtin_interfaces/Time start
+builtin_interfaces/Time estimated_end
+
+float32 target_distance
+
+# Human readable feedback description
+string state_string

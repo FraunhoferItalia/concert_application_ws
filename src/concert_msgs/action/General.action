@@ -1,0 +1,6 @@
+string data # JSON data
+---
+bool success
+string data # JSON data
+---
+string data # JSON data

@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<root
+        BTCPP_format="4"
+        main_tree_to_execute="MainTree">
+    <BehaviorTree ID="MainTree">
+        <Sequence>
+            <Action
+                    ID="nav2_skills::serialized::NavigateToPose"
+                    pose="{mobile_base_pose}"
+                    action_name="/robot/navigate_frame"/>
+            <Repeat num_cycles="10">
+                <SubTree ID="transport_tree"/>
+            </Repeat>
+        </Sequence>
+    </BehaviorTree>
+    <BehaviorTree ID="transport_tree">
+        <Sequence>
+            <Action
+                    ID="waypoint_manager::General"
+                    action_name="/waypoint_executor"
+                    goal_id="transport/workpose"/>
+
+            <Action
+                    ID="std_skills::WaitForAcknowledge"
+                    service_name="/transport/user_acknowledge"
+                    topic_name="/transport/user_info"
+                    data="[INACTIVE] Press next to enable mobile base hand guiding"/>
+
+            <Action
+                    ID="ros2_control_skills::SwitchController"
+                    activate_controllers="cartesian_impedance_controller"
+                    deactivate_controllers="joint_impedance_controller"
+                    service_name="/pino/controller_manager/switch_controller"/>
+
+            <Action
+                    ID="fhi_skills::StringTrigger"
+                    data="mobile_base_admittance_controller/drive"
+                    service_name="/parameter_profiles_manager/apply"/>
+
+            <SubTree ID="MobileBaseAdmittance"/>
+
+            <Action
+                    ID="std_skills::WaitForAcknowledge"
+                    service_name="/transport/user_acknowledge"
+                    topic_name="/transport/user_info"
+                    data="[INACTIVE] Press next to put the robot in gravity compensation"/>
+
+            <Action
+                    ID="ros2_control_skills::SwitchController"
+                    activate_controllers="gravity_compensation_controller"
+                    deactivate_controllers="cartesian_impedance_controller"
+                    service_name="/pino/controller_manager/switch_controller"/>
+
+            <Action
+                    ID="std_skills::WaitForAcknowledge"
+                    service_name="/transport/user_acknowledge"
+                    topic_name="/transport/user_info"
+                    data="[GRAVITY] Press next to close the gripper"/>
+
+            <Action
+                    ID="std_skills::Trigger"
+                    service_name="/end_effector/grasp"/>
+
+            <Action
+                    ID="std_skills::WaitForAcknowledge"
+                    service_name="/transport/user_acknowledge"
+                    topic_name="/transport/user_info"
+                    data="[COLLABORATIVE] Press next to move the robot to the transport pose while holding the object"/>
+
+            <Action
+                    ID="ros2_control_skills::SwitchController"
+                    activate_controllers="cartesian_impedance_controller"
+                    deactivate_controllers="gravity_compensation_controller"
+                    service_name="/pino/controller_manager/switch_controller"/>
+
+            <Action
+                    ID="waypoint_manager::General"
+                    action_name="/waypoint_executor"
+                    goal_id="transport/workpose"/>
+
+            <Action
+                    ID="std_skills::WaitForAcknowledge"
+                    service_name="/transport/user_acknowledge"
+                    topic_name="/transport/user_info"
+                    data="[COLLABORATIVE] Hold your side of the panel as static as possibile and press next."/>
+
+            <Action
+                    ID="fhi_skills::StringTrigger"
+                    data="mobile_base_admittance_controller/transport"
+                    service_name="/parameter_profiles_manager/apply"/>
+
+            <SubTree ID="MobileBaseAdmittance"/>
+
+            <SubTree ID="Deposit"/>
+
+            <Action
+                    ID="std_skills::WaitForAcknowledge"
+                    service_name="/transport/user_acknowledge"
+                    topic_name="/transport/user_info"
+                    data="[RELEASE] Press next to disengage object and move to transport pose"/>
+
+            <SubTree ID="Release"/>
+
+        </Sequence>
+    </BehaviorTree>
+
+    <BehaviorTree ID="MobileBaseAdmittance">
+        <Sequence>
+            <Action
+                    ID="fhi_skills::StringTrigger"
+                    data="pino/cartesian_impedance_controller/transport"
+                    service_name="/parameter_profiles_manager/apply"/>
+
+            <Action
+                    ID="std_skills::Trigger"
+                    service_name="/mobile_base_admittance_controller/activate"/>
+
+            <Action
+                    ID="std_skills::WaitForAcknowledge"
+                    service_name="/transport/user_acknowledge"
+                    topic_name="/transport/user_info"
+                    data="[ACTIVE] Press next to deactivate"/>
+
+            <Action
+                    ID="std_skills::Trigger"
+                    service_name="/mobile_base_admittance_controller/deactivate"/>
+        </Sequence>
+    </BehaviorTree>
+
+
+    <BehaviorTree ID="Deposit">
+        <Sequence>
+            <!-- TODO: Put the robot X,Y free axis -->
+            <Action
+                    ID="fhi_skills::StringTrigger"
+                    data="pino/cartesian_impedance_controller/planar_free_XY"
+                    service_name="/parameter_profiles_manager/apply"/>
+            <Action
+                    ID="std_skills::WaitForAcknowledge"
+                    service_name="/transport/user_acknowledge"
+                    topic_name="/transport/user_info"
+                    data="[COLLABORATIVE] Press next to deposit object"/>
+            <!-- TODO: Decrease Z stiffness gain slowly -->
+            <Action
+                    ID="fhi_skills::StringTrigger"
+                    data="pino/cartesian_impedance_controller/free_XYZ_RZ"
+                    service_name="/parameter_profiles_manager/apply"/>
+        </Sequence>
+    </BehaviorTree>
+
+
+    <BehaviorTree ID="Release">
+        <Sequence>
+            <!-- Open gripper -->
+            <Action
+                    ID="std_skills::Trigger"
+                    service_name="/end_effector/open"/>
+            <!-- Activate joint impedance controller -->
+            <Action
+                    ID="ros2_control_skills::SwitchController"
+                    activate_controllers="joint_impedance_controller"
+                    deactivate_controllers="cartesian_impedance_controller"
+                    service_name="/pino/controller_manager/switch_controller"/>
+            <!-- Call transport release action -->
+            <Action
+                    ID="waypoint_manager::General"
+                    action_name="/waypoint_executor"
+                    goal_id="transport/release"/>
+        </Sequence>
+    </BehaviorTree>
+</root>

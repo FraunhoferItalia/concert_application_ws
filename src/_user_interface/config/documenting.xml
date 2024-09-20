@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="DocumentingTree">
+    <BehaviorTree ID="DocumentingTree">
+        <Sequence>
+                <Script code="id:=0" />
+                <Action ID="MoveToNamedPose" group="{group}" max_acceleration_scaling_factor="1.0" max_velocity_scaling_factor="1.0" pose_name="{safe_pose}"/>
+                <Decorator ID="ForEachWaypoint" arm_waypoints="arm_waypoints" base_pose="base_pose" filename="{filename}">
+                <Sequence>
+                        <Action ID="MoveBase" frame="{frame}" goal_pose="{base_pose}" server_name="{server_name}" timeout="500"/>
+                        <Action ID="TakeImage" path="/balto_ws/src/6_concert_behavior/_concert_meta/documentation/" file_name="{ifc_object}" num_name="{id}" service_name="/image_cmd"/>
+                        <Script code=" id:=id+1 " />
+                </Sequence>
+                </Decorator>
+        </Sequence>
+    </BehaviorTree>
+    <TreeNodesModel>
+        <SubTree ID="DocumentingTree">
+            <input_port default="false" name="__shared_blackboard"/>
+            <input_port default="/balto_ws/src/6_concert_behavior/_concert_meta/config/documentation_waypoints.yaml" name="filename"/>
+            <input_port default="map" name="frame"/>
+            <input_port default="panda_arm" name="group"/>
+            <input_port default="transport" name="safe_pose"/>
+            <input_port default="/neobotix/planning/move_base" name="server_name"/>
+            <input_port default="test_" name="ifc_object"/>
+        </SubTree>
+    </TreeNodesModel>
+</root>

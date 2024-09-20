@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="IcraPaintingTree">
+    <BehaviorTree ID="IcraPaintingTree">
+        <Sequence>
+            <Action ID="TriggerService" service_name="/waypoints_to_executor" timeout="500"/>
+        </Sequence>
+    </BehaviorTree>
+    <TreeNodesModel>
+        <SubTree ID="IcraPaintingTree">
+            <input_port default="false" name="__shared_blackboard"/>
+            <input_port default="/balto_ws/src/6_concert_behavior/_concert_meta/config/rosbim_rviz_output.yaml" name="filename"/>
+            <input_port default="painting_marker_frame" name="frame"/>
+        </SubTree>
+    </TreeNodesModel>
+</root>

@@ -1,0 +1,29 @@
+// See https://aka.ms/vscode-remote/devcontainer.json for format details.
+{
+	"name": "",
+	"dockerComposeFile": [
+		"../docker/docker-compose-nvidia.yml"
+	],
+	"forwardPorts": [8080, 8888],
+	"service": "concert_application",
+	"workspaceFolder": "/concert_application_ws",
+	"shutdownAction": "stopCompose",
+	"extensions": [
+		"dotjoshjohnson.xml",
+		"zachflower.uncrustify",
+		"ms-azuretools.vscode-docker",
+		"ms-iot.vscode-ros",
+		"ms-python.python",
+		"ms-python.vscode-pylance",
+		"ms-vscode.cpptools",
+		"ms-vscode.cmake-tools",
+		"redhat.vscode-xml",
+		"redhat.vscode-yaml",
+		"smilerobotics.urdf",
+		"streetsidesoftware.code-spell-checker",
+		"VisualStudioExptTeam.vscodeintellicode",
+		"twxs.cmake",
+		"mhutchie.git-graph",
+		"xaver.clang-format"
+	]
+}

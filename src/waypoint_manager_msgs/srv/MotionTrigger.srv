@@ -1,0 +1,6 @@
+waypoint_manager_msgs/Action action
+---
+bool success
+
+# Human readable description of the error code.
+string error_string

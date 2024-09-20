@@ -1,0 +1,5 @@
+# this config file is used for the drilling experiments with the landmarks
+aruco_0: [6.01, 5.87, 1.35, 1.571, 0.0, 0.0]
+aruco_1: [6.33, 5.87, 1.35, 1.571, 0.0, 0.0]
+aruco_2: [6.74, 5.87, 1.35, 1.571, 0.0, 0.0]
+aruco_3: [7.12, 5.87, 1.35, 1.571, 0.0, 0.0]

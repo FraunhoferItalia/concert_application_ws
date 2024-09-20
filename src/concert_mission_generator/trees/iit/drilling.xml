@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<root
+        BTCPP_format="4"
+        main_tree_to_execute="DrillingTree">
+    <include path="initialization.xml"/>
+    <BehaviorTree ID="DrillingTree">
+        <Sequence>
+            <SubTree ID="InitializationTree"/>
+            <Action
+                    ID="std_skills::SetBool"
+                    data="true"
+                    service_name="/xbotcore/omnisteering/switch_state"/>
+            <Action
+                    ID="nav2_skills::serialized::NavigateToPose"
+                    pose="{mobile_base_pose}"
+                    action_name="/navigate_frame"/>
+            <Action
+                    ID="std_skills::SetBool"
+                    data="false"
+                    service_name="/xbotcore/omnisteering/switch_state"/>
+            <Sleep msec="2000"/>
+            <!-- <SubTree
+                    ID="NavigateToPose"
+                    serialized_pose="{mobile_base_pose}"/> -->
+            <SubTree
+                    ID="MoveToLookAt"
+                    look_at_tf_name="{look_at_tf_name}"/>
+            <Action
+                    ID="concert_skills::GetDrillBlobIds"
+                    blob_ids="{blob_ids}"
+                    topic_name="/drill_blob_detector/blob_array/serialized"/>
+
+            <Fallback>
+                <KeepRunningUntilFailure>
+                    <Sequence>
+                        <IfThenElse>
+                            <Action
+                                    ID="bt_helpers::string::queue::Pop"
+                                    queue="{blob_ids}"
+                                    popped_item="{blob_id}"/>
+                            <AlwaysSuccess/>
+                            <Sequence>
+                                <Script code=" empty_list := 'true' "/>
+                                <AlwaysFailure/>
+                            </Sequence>
+                        </IfThenElse>
+                        <Action
+                                ID="concert_skills::DrillAction"
+                                blob_id="{blob_id}"
+                                pre_approach_distance="0.05"
+                                force_threshold="40.0"
+                                approach_velocity="0.03"
+                                blob_depth="0.05"
+                                drill_velocity="0.001"
+                                action_name="/drill"/>
+                        <SubTree
+                                ID="MoveToLookAt"
+                                look_at_tf_name="{look_at_tf_name}"/>
+                        <Action
+                                ID="concert_skills::GetDrillBlobIds"
+                                blob_ids="{blob_ids}"
+                                topic_name="/drill_blob_detector/blob_array/serialized"/>
+                    </Sequence>
+                </KeepRunningUntilFailure>
+                <Script code=" empty_list = 'true' "/>
+            </Fallback>
+            <!-- <SubTree ID="HomeCollisionFree"/> -->
+            <!-- <SubTree ID="StopCartesianImp"/> -->
+            <!-- <Action
+                    ID="std_skills::SetBool"
+                    data="true"
+                    service_name="/xbotcore/omnisteering/switch_state"/>
+            <Action
+                    ID="nav2_skills::serialized::NavigateToPose"
+                    pose="{mobile_base_pose}"
+                    action_name="/navigate_frame"/> -->
+            <!-- <Action
+                    ID="nav2_skills::serialized::NavigateToPose"
+                    pose="-5.380; -2.576; 1.57;"
+                    action_name="/navigate_frame"/> -->
+            <!-- <Action
+                    ID="std_skills::SetBool"
+                    data="false"
+                    service_name="/xbotcore/omnisteering/switch_state"/> -->
+            <!-- <SubTree ID="NavigateToPose" serialized_pose="-4.0; -0.5; 0.0;"/> -->
+        </Sequence>
+    </BehaviorTree>
+
+
+    <BehaviorTree ID="MoveToLookAt">
+        <Sequence>
+            <Action
+                    ID="std_skills::SetBool"
+                    data="true"
+                    service_name="/cartesio/roscontrol_switch"/>
+            <Action
+                    ID="tf_manager::LookupTransform"
+                    parent_frame_id="base_link"
+                    child_frame_id="{look_at_tf_name}"
+                    x="{move_to_look_at.x}"
+                    y="{move_to_look_at.y}"
+                    z="{move_to_look_at.z}"
+                    qx="{move_to_look_at.qx}"
+                    qy="{move_to_look_at.qy}"
+                    qz="{move_to_look_at.qz}"
+                    qw="{move_to_look_at.qw}"/>
+            <Action
+                    ID="concert_skills::CartesioMoveWaypoint"
+                    x="{move_to_look_at.x}"
+                    y="{move_to_look_at.y}"
+                    z="{move_to_look_at.z}"
+                    qx="{move_to_look_at.qx}"
+                    qy="{move_to_look_at.qy}"
+                    qz="{move_to_look_at.qz}"
+                    qw="{move_to_look_at.qw}"
+                    time="5.0"
+                    incremental="false"
+                    action_name="/move_to_look_at"/>
+            <Action
+                    ID="std_skills::SetBool"
+                    data="false"
+                    service_name="/cartesio/roscontrol_switch"/>
+        </Sequence>
+    </BehaviorTree>
+
+    <BehaviorTree ID="HomeCollisionFree">
+        <Sequence>
+            <Action
+                    ID="std_skills::SetBool"
+                    data="true"
+                    service_name="/cartesio/roscontrol_switch"/>
+            <Action
+                    ID="concert_skills::CartesioMoveWaypoint"
+                    x="0.0"
+                    y="0.0"
+                    z="0.0"
+                    qx="0.0"
+                    qy="0.0"
+                    qz="0.0"
+                    qw="0.0"
+                    time="5.0"
+                    incremental="false"
+                    action_name="/move_to_look_at"/>
+            <Action
+                    ID="std_skills::SetBool"
+                    data="false"
+                    service_name="/cartesio/roscontrol_switch"/>
+        </Sequence>
+    </BehaviorTree>
+
+
+    <BehaviorTree ID="NavigateToPose">
+        <Sequence>
+
+            <Action
+                    ID="std_skills::SetBool"
+                    data="true"
+                    service_name="/xbotcore/omnisteering/switch_state"/>
+            <Action
+                    ID="nav2_skills::serialized::NavigateToPose"
+                    pose="{serialized_pose}"
+                    action_name="/navigate_frame"/>
+            <Action
+                    ID="std_skills::SetBool"
+                    data="false"
+                    service_name="/xbotcore/omnisteering/switch_state"/>
+        </Sequence>
+    </BehaviorTree>
+</root>

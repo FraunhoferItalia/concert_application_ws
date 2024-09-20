@@ -1,0 +1,41 @@
+concert_application:
+  commands:
+    build:
+      subcommands: rbuild
+    bringup:
+      subcommands:
+        - ros2 launch user_interface bringup.launch.py
+          bim_file:='/concert_application_ws/src/_user_interface/bim_files/{{ bim_file }}.ifc'
+          rviz_file:={{ task }}
+          gui_config:={{ gui_config }}
+        - ros2 run concert_mission_generator {{ task }}_mission_generator.py --ros-args -p use_sim_time:={{ sim }}
+      description: starts concert drilling gui
+      args:
+        sim:
+          value: false
+          options: [true, false]
+        bim_file:
+          value: "kranhalle"
+          options: ["kranhalle", "IIT_Lab_Model", "NOI_D3_FRAUNHOFERITALIA"]
+        task:
+          value: "drilling"
+          options: ["drilling", "transport", "IIT_drilling"]
+        gui_config:
+          value: "gui_config"
+          options: ["gui_config", "IIT_gui_config"]
+    bt_tester:
+      subcommands:
+        - ros2 run concert_mission_generator send_behavior_tree_client.py
+          -b /concert_application_ws/src/concert_mission_generator/trees/{{ tree }}
+          --ports {{ ports }}
+      args:
+        tree:
+          value: "iit/drilling.xml"
+          options:
+            [
+              "iit/drilling.xml",
+              "iit/initialization.xml",
+              "drilling.xml",
+              "drilling_sim.xml",
+            ]
+        ports: "" # arg1=value1 ...

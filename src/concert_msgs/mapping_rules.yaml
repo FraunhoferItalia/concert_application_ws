@@ -1,0 +1,5 @@
+-
+  ros1_package_name: 'concert_msgs'
+  ros1_service_name: 'String'
+  ros2_package_name: 'concert_msgs'
+  ros2_service_name: 'String'

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>concert_mission_generator</name>
+  <version>0.0.1</version>
+  <description>ROS2 concert_mission_generator package</description>
+
+  <author>Fraunhofer Italia Research scarl</author>
+  <license>Apache 2.0</license>
+  <maintainer email="michael.terzer@fraunhofer.it">Michael Terzer</maintainer>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>tf_manager_msgs</depend>
+  <depend>behavior_tree_msgs</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<root
+        BTCPP_format="4"
+        main_tree_to_execute="InitializationTree">
+    <BehaviorTree ID="InitializationTree">
+        <Sequence>
+            <SubTree ID="StartCartesianImp"/>
+            <SubTree ID="CartesianImpHoming"/>
+            <Action
+                    ID="std_skills::SetBool"
+                    data="true"
+                    service_name="/xbotcore/ros_ctrl/switch_state"/>
+            <Action
+                    ID="std_skills::SetBool"
+                    data="false"
+                    service_name="/xbotcore/omnisteering/switch_state"/>
+        </Sequence>
+    </BehaviorTree>
+
+    <BehaviorTree ID="StartCartesianImp">
+        <Fallback>
+            <Action
+                    ID="concert_skills::CheckPluginStatus"
+                    plugin_name="cartesio_imp"
+                    valid_states="Running;"
+                    topic_name="/xbotcore/plugin_status"/>
+            <Sequence>
+                <Action
+                        ID="std_skills::SetBool"
+                        data="true"
+                        service_name="/xbotcore/cartesio_imp/switch"/>
+                <RetryUntilSuccessful num_attempts="10000">
+                    <Action
+                            ID="concert_skills::CheckPluginStatus"
+                            plugin_name="cartesio_imp"
+                            valid_states="Running;"
+                            topic_name="/xbotcore/plugin_status"/>
+                </RetryUntilSuccessful>
+            </Sequence>
+        </Fallback>
+    </BehaviorTree>
+
+    <BehaviorTree ID="StopCartesianImp">
+        <Fallback>
+            <Action
+                    ID="concert_skills::CheckPluginStatus"
+                    plugin_name="cartesio_imp"
+                    valid_states="Stopped;"
+                    topic_name="/xbotcore/plugin_status"/>
+            <Sequence>
+                <Action
+                        ID="std_skills::SetBool"
+                        data="false"
+                        service_name="/xbotcore/cartesio_imp/switch"/>
+                <RetryUntilSuccessful num_attempts="10000">
+                    <Action
+                            ID="concert_skills::CheckPluginStatus"
+                            plugin_name="cartesio_imp"
+                            valid_states="Stopped;"
+                            topic_name="/xbotcore/plugin_status"/>
+                </RetryUntilSuccessful>
+            </Sequence>
+        </Fallback>
+    </BehaviorTree>
+
+    <BehaviorTree ID="CartesianImpHoming">
+        <Sequence>
+            <Action
+                    ID="std_skills::SetBool"
+                    data="true"
+                    service_name="/cartesio/roscontrol_switch"/>
+            <Action
+                    ID="std_skills::SetBool"
+                    data="true"
+                    service_name="/xbotcore/homing/switch_state"/>
+            <RetryUntilSuccessful num_attempts="10000">
+                <Action
+                        ID="concert_skills::CheckPluginStatus"
+                        plugin_name="homing"
+                        valid_states="Stopped;"
+                        topic_name="/xbotcore/plugin_status"/>
+            </RetryUntilSuccessful>
+            <Action
+                    ID="std_skills::SetBool"
+                    data="false"
+                    service_name="/cartesio/roscontrol_switch"/>
+        </Sequence>
+    </BehaviorTree>
+</root>

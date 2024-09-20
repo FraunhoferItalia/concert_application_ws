@@ -1,0 +1,7 @@
+positions:
+  - name: test_position
+    x: 8.0
+    y: 3.0
+  - name: pick_position
+    x: 22.45
+    y: 0.40

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="TestMoveArm">
+    <BehaviorTree ID="TestMoveArm">
+        <Decorator ID="ForEachWaypoint" arm_waypoints="arm_waypoints" base_pose="base_pose" filename="{filename}">
+            <Sequence>
+                <Action ID="MoveArm" reference_frame="{map_frame}" goal_pose="{arm_waypoints}" service_name="/move_arm" timeout="500"/>
+            </Sequence>
+        </Decorator>
+    </BehaviorTree>
+    <TreeNodesModel>
+        <SubTree ID="TestMoveArm">
+            <input_port default="false" name="__shared_blackboard"/>
+            <input_port default="/concert_mission_ws/src/_concert_demo/config/rosbim_rviz_output.yaml" name="filename"/>
+            <input_port default="map" name="map_frame"/>
+            <input_port default="drilling_task_frame" name="task_frame"/>
+            <input_port default="0.0; 5.0; 3.14" name="drilling_pose"/>
+            <input_port default="0.0; 0.0; 0.0" name="demo_end_pose"/>
+            <input_port default="/navigate_to_pose" name="nav2_server_name"/>
+            <input_port default="/drilling" name="drilling_server_name"/>
+            <input_port default="/calibration" name="calibration_server_name"/>
+            <input_port default="/arm_safe_pose" name="arm_safe_pose_server_name"/>
+        </SubTree>
+    </TreeNodesModel>
+</root>

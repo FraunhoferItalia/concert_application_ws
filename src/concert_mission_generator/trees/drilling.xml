@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<root
+        BTCPP_format="4"
+        main_tree_to_execute="MainTree">
+    <include path="aruco_calibration_tree.xml"/>
+    <include path="mobile_base_position_refinement_tree.xml"/>
+    <BehaviorTree ID="MainTree">
+        <Sequence>
+<!-- 
+            <Action
+                    ID="waypoint_manager::WaypointLoad"
+                    service_name="/waypoint_handler/load"
+                    data="{waypoint_msgs_drilling}"/>
+            <Action
+                    ID="waypoint_manager::General"
+                    action_name="/waypoint_executor"
+                    goal_id="drilling/rest"/> -->
+
+            <Action
+                    ID="nav2_skills::serialized::NavigateToPose"
+                    pose="{mobile_base_pose_approach}"
+                    action_name="/robot/navigate_frame"/>
+
+            <!-- <Script code=" aruco_frame_name:='fiducial_' + '{aruco_id}'"/>
+
+            <Action
+                    ID="bt_helpers::string::queue::Create"
+                    items="drilling/calibration/snapshot0;"
+                    queue="{snapshot_wpa_names}"/>
+
+            <SubTree
+                    ID="ArucoCalibrationTree"
+                    calibration_frame_name="robot_base_link"
+                    id="{aruco_id}"
+                    output_frame_name="aruco_frame"
+                    threshold="0.2"
+                    exposure="3"
+                    snapshot_wpa_names="{snapshot_wpa_names}"
+                    calibrated_transform="{calibrated_transform}"/> -->
+
+            <!-- <Script code=" y_additional:={mobile_base_refinement_y} + 0.1 " /> -->
+            <!-- <Action
+                    ID="tf_manager::LookupTransform"
+                    parent_frame_id="robot_base_footprint"
+                    child_frame_id="{mobile_base_reference_frame_name}"
+                    x="{mobile_base_refinement_x}"
+                    y="{mobile_base_refinement_y}"
+                    yaw="{mobile_base_refinement_yaw}"/>
+
+            <SubTree
+                    ID="MobileBasePositionRefinement"
+                    x="{mobile_base_refinement_x}"
+                    y="{mobile_base_refinement_y}"
+                    yaw="{mobile_base_refinement_yaw}"/>
+            <Action
+                    ID="bt_helpers::string::queue::Create"
+                    items="drilling/calibration/snapshot0;"
+                    queue="{snapshot_wpa_names}"/>
+            <SubTree
+                    ID="ArucoCalibrationTree"
+                    calibration_frame_name="robot_base_link"
+                    id="{aruco_id}"
+                    output_frame_name="aruco_frame"
+                    threshold="0.005"
+                    exposure="10"
+                    snapshot_wpa_names="{snapshot_wpa_names}"
+                    calibrated_transform="{calibrated_transform}"/>
+            <Action
+                    ID="tf_manager::LookupTransform"
+                    parent_frame_id="robot_base_footprint"
+                    child_frame_id="{mobile_base_reference_frame_name}"
+                    x="{mobile_base_refinement_x}"
+                    y="{mobile_base_refinement_y}"
+                    yaw="{mobile_base_refinement_yaw}"/>
+
+            <SubTree
+                    ID="MobileBasePositionRefinement"
+                    x="{mobile_base_refinement_x}"
+                    y="{mobile_base_refinement_y}"
+                    yaw="{mobile_base_refinement_yaw}"/>
+
+            <Action
+                    ID="bt_helpers::string::queue::Create"
+                    items="drilling/calibration/snapshot0;"
+                    queue="{snapshot_wpa_names}"/>
+            <SubTree
+                    ID="ArucoCalibrationTree"
+                    calibration_frame_name="robot_base_link"
+                    id="{aruco_id}"
+                    output_frame_name="aruco_frame"
+                    threshold="0.005"
+                    exposure="10"
+                    snapshot_wpa_names="{snapshot_wpa_names}"
+                    calibrated_transform="{calibrated_transform}"/>
+            <Action
+                    ID="waypoint_manager::General"
+                    action_name="/waypoint_executor"
+                    goal_id="drilling/approach"/>
+
+            <Action
+                    ID="concert_skills::MoveUntilContact"
+                    motion_direction="0.0;0.0;-1.0"
+                    force="30.0"
+                    speed="0.3"
+                    max_distance="0.3"
+                    timeout_sec="20.0"
+                    action_name="/move_until_contact"/>
+
+            <Action
+                    ID="std_skills::WaitForAcknowledge"
+                    service_name="/transport/user_acknowledge"
+                    topic_name="/transport/user_info"
+                    data="[DRILL INACTIVE] Press next to start the driller"/>
+            <Action
+                    ID="std_skills::SetBool"
+                    data="true"
+                    service_name="/enable_driller"/>
+            <Action
+                    ID="std_skills::WaitForAcknowledge"
+                    service_name="/transport/user_acknowledge"
+                    topic_name="/transport/user_info"
+                    data="[DRILL ACTIVE] Press next to drill"/>
+            <Action
+                    ID="concert_skills::MoveUntilContact"
+                    motion_direction="0.0;0.0;-1.0"
+                    force="100.0"
+                    speed="0.15"
+                    max_distance="0.02"
+                    timeout_sec="20.0"
+                    action_name="/move_until_contact"/>
+            <Action
+                    ID="concert_skills::MoveUntilContact"
+                    motion_direction="0.0;0.0;1.0"
+                    force="80.0"
+                    speed="0.5"
+                    max_distance="0.2"
+                    timeout_sec="20.0"
+                    action_name="/move_until_contact"/>
+            <Action
+                    ID="std_skills::WaitForAcknowledge"
+                    service_name="/transport/user_acknowledge"
+                    topic_name="/transport/user_info"
+                    data="[DRILL ACTIVE] Press next to stop the driller"/>
+            <Action
+                    ID="std_skills::SetBool"
+                    data="false"
+                    service_name="/enable_driller"/>
+            <Action
+                    ID="waypoint_manager::General"
+                    action_name="/waypoint_executor"
+                    goal_id="drilling/rest"/>
+            <Action
+                    ID="nav2_skills::MoveLaterally"
+                    distance="0.5"
+                    speed="0.1"
+                    time_allowance="50"
+                    action_name="/robot/move_laterally"/> -->
+        </Sequence>
+    </BehaviorTree>
+</root>

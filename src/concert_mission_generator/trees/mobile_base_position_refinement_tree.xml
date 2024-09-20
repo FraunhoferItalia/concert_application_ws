@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<root
+        BTCPP_format="4"
+        main_tree_to_execute="MobileBasePositionRefinement">
+    <BehaviorTree ID="MobileBasePositionRefinement">
+        <Sequence>
+            <!-- <Script code=" y_scaled:={scale} * {y} "/> -->
+
+            <Action
+                    ID="nav2_skills::DriveOnHeading"
+                    distance="{x}"
+                    speed="0.1"
+                    time_allowance="20"
+                    action_name="/robot/drive_on_heading"/>
+
+            <Action
+                    ID="nav2_skills::MoveLaterally"
+                    distance="{y}"
+                    speed="0.07"
+                    time_allowance="50"
+                    action_name="/robot/move_laterally"/>
+
+            <!-- <Action
+                    ID="nav2_skills::Spin"
+                    yaw="{yaw}"
+                    speed="0.3"
+                    time_allowance="10"
+                    action_name="/robot/spin"/> -->
+        </Sequence>
+    </BehaviorTree>
+</root>

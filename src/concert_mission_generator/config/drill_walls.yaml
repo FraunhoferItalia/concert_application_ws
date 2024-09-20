@@ -1,0 +1,3 @@
+# this path indicates which walls are drillable. This information could come from
+# a BIM propoerty in future.
+path: "/concert_application_ws/src/_user_interface/bim_files/drill_walls/"

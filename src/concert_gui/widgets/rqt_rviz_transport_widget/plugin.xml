@@ -1,0 +1,11 @@
+<library path="src">
+  <class name="ConcertTransportRvizGui" type="rqt_rviz_transport_widget.rviz_transport_gui.ConcertTransportRvizGui" base_class_type="rqt_gui_py::Plugin">
+    <description>
+      Transport GUI for Concert.
+    </description>
+    <qtgui>
+      <label>Concert Rviz Transport GUI</label>
+      <statustip>Concert RViz Transport GUI</statustip>
+    </qtgui>
+  </class>
+</library>

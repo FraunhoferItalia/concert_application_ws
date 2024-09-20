@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="DrillingTree">
+    <BehaviorTree ID="DrillingTree">
+        <Decorator ID="ForEachWaypoint" arm_waypoints="arm_waypoints" base_pose="base_pose" filename="{filename}">
+            <Sequence>
+                <!-- <Action ID="MoveArm" reference_frame="{map_frame}" waypoints="{arm_waypoints}" service_name="/move_arm" timeout="500"/> -->
+                <!-- <Action ID="NavigateToPose" reference_frame="{map_frame}" goal_pose="{base_pose}" service_name="{nav2_server_name}" timeout="500"/> -->
+                <!-- Move Arm into safe pose called "transport" through calling a trigger service.-->
+                <Action ID="TriggerService" service_name="{arm_safe_pose_server_name}" timeout="500"/>
+                <!-- Navigate to the drilling pose with the mobile robot.-->
+                <Action ID="NavigateToPose" reference_frame="{map_frame}" goal_pose="{base_pose}" service_name="{nav2_server_name}" timeout="500"/>
+                <Inverter>
+                    <KeepRunningUntilFailure>
+                        <Inverter>
+                            <Action ID="NavigationActionChecker" topic_name="/ros1_service_to_ros2_action/navigation_status"/>
+                        </Inverter>
+                    </KeepRunningUntilFailure>
+                 </Inverter>
+                <!-- Calibrate the transform from robot base_link to the drilling task_frame.-->
+                <Action ID="Calibration" reference_frame="{task_frame}" task_frame="{task_frame}" service_name="{calibration_server_name}" timeout="500"/>
+                <!-- Activate the drilling task with reference to the task frame. This node parses the goal_poses and calls
+                a geometry_msg[] service-->
+                <Action ID="Drilling" reference_frame="{task_frame}" goal_pose="{arm_waypoints}" service_name="{drilling_server_name}" timeout="500"/>
+                <Action ID="TriggerService" service_name="{arm_safe_pose_server_name}" timeout="500"/>
+                <Action ID="NavigateToPose" reference_frame="{map_frame}" goal_pose="{demo_end_pose}" service_name="{nav2_server_name}" timeout="500"/>
+                <Inverter>
+                    <KeepRunningUntilFailure>
+                        <Inverter>
+                            <Action ID="NavigationActionChecker" topic_name="/ros1_service_to_ros2_action/navigation_status"/>
+                        </Inverter>
+                    </KeepRunningUntilFailure>
+                 </Inverter>
+            </Sequence>
+        </Decorator>
+    </BehaviorTree>
+    <TreeNodesModel>
+        <SubTree ID="DrillingTree">
+            <input_port default="false" name="__shared_blackboard"/>
+            <input_port default="/concert_mission_ws/src/_concert_demo/config/rosbim_rviz_output.yaml" name="filename"/>
+            <input_port default="map" name="map_frame"/>
+            <input_port default="drilling_task_frame" name="task_frame"/>
+            <input_port default="0.0; 5.0; 3.14" name="drilling_pose"/>
+            <input_port default="0.0; 0.0; 0.0" name="demo_end_pose"/>
+            <input_port default="/navigate_to_pose" name="nav2_server_name"/>
+            <input_port default="/drilling" name="drilling_server_name"/>
+            <input_port default="/calibration" name="calibration_server_name"/>
+            <input_port default="/arm_safe_pose" name="arm_safe_pose_server_name"/>
+        </SubTree>
+    </TreeNodesModel>
+</root>

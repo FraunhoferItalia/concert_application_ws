@@ -1,0 +1,20 @@
+<library path="src">
+  <class name="MainGui" type="concert_main_gui.__main__.MainGui" base_class_type="rqt_gui_py::Plugin">
+    <description>
+      Concert Main GUI
+    </description>
+    <qtgui>
+      <!-- optional grouping...
+      <group>
+        <label>Group</label>
+      </group>
+      <group>
+        <label>Subgroup</label>
+      </group>
+      -->
+      <label>Concert GUI</label>
+      <icon type="file">config/images/concert_200px.png</icon>      
+      <statustip>Concert GUI</statustip>
+    </qtgui>
+  </class>
+</library>

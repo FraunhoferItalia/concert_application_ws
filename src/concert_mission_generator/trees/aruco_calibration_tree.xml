@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<root
+        BTCPP_format="4"
+        main_tree_to_execute="ArucoCalibrationTree">
+    <BehaviorTree ID="ArucoCalibrationTree">
+        <Sequence>
+            <Action
+                    ID="std_skills::SetBool"
+                    data="true"
+                    service_name="/aruco_detect/enable_detections"/>
+
+            <Action
+                    ID="bt_helpers::string::queue::Size"
+                    queue="{snapshot_wpa_names}"
+                    size="{snapshot_wpa_size}"/>
+
+            <Repeat num_cycles="{snapshot_wpa_size}">
+                <ForceSuccess>
+                    <Sequence>
+                        <Action
+                                ID="bt_helpers::string::queue::Pop"
+                                queue="{snapshot_wpa_names}"
+                                popped_item="{wp}"/>
+                        <Action
+                                ID="waypoint_manager::General"
+                                goal_id="{wp}"
+                                action_name="waypoint_executor"/>
+                        <!-- TODO: is this wait really needed? -->
+                        <Delay delay_msec="1000">
+                            <!--  TODO: add exposure as input -->
+                            <Action
+                                    ID="pose_calibration::Snapshot"
+                                    frame_name="{calibration_frame_name}"
+                                    id="{id}"
+                                    exposure="{exposure}"
+                                    threshold="{threshold}"
+                                    service_name="snapshot"/>
+                        </Delay>
+                    </Sequence>
+                </ForceSuccess>
+            </Repeat>
+            <Action
+                    ID="std_skills::SetBool"
+                    data="false"
+                    service_name="/aruco_detect/enable_detections"/>
+            <Action
+                    ID="pose_calibration::Compute"
+                    transformation="{compute_result}"
+                    service_name="compute"/>
+            <Action
+                    ID="std_skills::unpackers::TransformStamped"
+                    transform_stamped="{compute_result}"
+                    transform="{compute_transform}"/>
+            <Action
+                    ID="tf_manager::SetTransformation"
+                    parent_frame_id="{calibration_frame_name}"
+                    child_frame_id="aruco_frame"
+                    transform="{compute_transform}"
+                    disable_link="false"
+                    service_name="/tf_manager/set_transformation"/>
+        </Sequence>
+    </BehaviorTree>
+</root>

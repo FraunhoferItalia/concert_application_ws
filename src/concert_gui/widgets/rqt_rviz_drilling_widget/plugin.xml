@@ -1,0 +1,11 @@
+<library path="src">
+  <class name="ConcertRvizDrillingGui" type="rqt_rviz_drilling_widget.rviz_drilling_gui.ConcertRvizDrillingGui" base_class_type="rqt_gui_py::Plugin">
+    <description>
+      Drilling widget for GUI for Concert.
+    </description>
+    <qtgui>
+      <label>Concert Rviz Drilling GUI</label>
+      <statustip>Concert RViz Drilling GUI</statustip>
+    </qtgui>
+  </class>
+</library>

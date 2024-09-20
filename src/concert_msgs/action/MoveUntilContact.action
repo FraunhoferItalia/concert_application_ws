@@ -1,0 +1,19 @@
+geometry_msgs/Vector3 motion_direction
+float64 force
+float64 speed
+float64 max_distance
+float64 timeout_sec
+---
+int32 result_code
+int32 TIMED_OUT = 0
+int32 MAX_DISTANCE_REACHED = 1
+int32 FORCE_REACHED = 2
+
+float64 force
+float64 distance
+
+# Human readable description of the error code.
+string error_string
+---
+float64 current_distance
+float64 current_force

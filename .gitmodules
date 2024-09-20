@@ -1,0 +1,3 @@
+[submodule "src/rosbim"]
+	path = src/rosbim
+	url = https://github.com/FraunhoferItalia/rosbim

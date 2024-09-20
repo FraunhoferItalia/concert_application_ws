@@ -1,0 +1,21 @@
+#Main GUI
+robot_status:
+  topic_name: /transport/user_info 
+bt_status:
+  topic_name: /bt_action_server/_action/status
+battery_status:
+  topic_name: /robot/battery
+emergency_status:
+  topic_name: /robot/emergency
+
+#Camera Viewer
+camera_front_viewer:
+  topic_name: /robot/front_camera/color/image_raw/compressed
+camera_eef_viewer:
+  topic_name: /drill_camera_E/color/image_raw/compressed
+
+#Rviz Widget
+next_action_service:
+  service_name: /transport/user_acknowledge
+stop_behavior_tree:
+  service_name: /bt_action_server/_action/cancel_goal
